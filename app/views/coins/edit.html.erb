@@ -1,0 +1,12 @@
+<div class="container my-5 max-width-form" style="max-width: 700px;">
+  <div class="card p-4 p-md-5 border-0 shadow-sm bg-white">
+    <div class="d-flex justify-content-between align-items-start mb-4">
+      <div>
+        <h2 class="fw-bold mb-1 text-dark">Modify Asset Allocation</h2>
+        <p class="text-muted mb-0">Update holding parameters for <%= @coin.name %> (<%= @coin.symbol %>).</p>
+      </div>
+      <%= button_to "Delete Asset", coin_path(@coin), method: :delete, data: { confirm: "Are you sure you want to delete this coin entry?" }, class: "btn btn-sm btn-outline-danger" %>
+    </div>
+    <%= render "form", coin: @coin %>
+  </div>
+</div>

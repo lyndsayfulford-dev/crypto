@@ -1,0 +1,42 @@
+<%= form_with(model: coin, local: true, class: "needs-validation") do |f| %>
+  <% if coin.errors.any? %>
+    <div class="alert alert-danger mb-4 shadow-sm">
+      <h6 class="fw-bold mb-2">Please correct the following errors:</h6>
+      <ul class="mb-0 text-sm">
+        <% coin.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="row g-3 mb-4">
+    <div class="col-md-6">
+      <%= f.label :name, "Asset Name (e.g. Bitcoin)", class: "form-label fw-semibold text-secondary" %>
+      <%= f.text_field :name, placeholder: "Bitcoin", class: "form-control form-control-lg", required: true %>
+    </div>
+    
+    <div class="col-md-6">
+      <%= f.label :symbol, "Ticker Symbol (e.g. BTC)", class: "form-label fw-semibold text-secondary" %>
+      <%= f.text_field :symbol, placeholder: "BTC", class: "form-control form-control-lg text-uppercase", required: true %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :amount_owned, "Amount Owned", class: "form-label fw-semibold text-secondary" %>
+      <%= f.number_field :amount_owned, step: "0.00000001", placeholder: "0.00000000", class: "form-control form-control-lg", required: true %>
+    </div>
+
+    <div class="col-md-6">
+      <%= f.label :cost_per_coin, "Purchase Price (Per Coin USD)", class: "form-label fw-semibold text-secondary" %>
+      <div class="input-group">
+        <span class="input-group-text bg-light fw-bold text-muted">$</span>
+        <%= f.number_field :cost_per_coin, step: "0.00000001", placeholder: "0.00", class: "form-control form-control-lg", required: true %>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex align-items-center gap-2 border-top pt-4 mt-2">
+    <%= f.submit "Save Asset holdings", class: "btn btn-primary btn-lg px-4 shadow-sm" %>
+    <%= link_to "Cancel", root_path, class: "btn btn-light btn-lg px-4 text-muted" %>
+  </div>
+<% end %>
