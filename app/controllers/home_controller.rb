@@ -1,25 +1,12 @@
 class HomeController < ApplicationController
+  # 🟢 Allow logged-out guests to see the market overview index page
+  skip_before_action :authenticate_user!, only: [ :index ]
+
   def index
-    @coins = Coin.all
-    calculate_totals
-  end
-
-  def refresh
-    service = CoinMarketCapService.new
-    if service.refresh_prices!
-      flash[:notice] = "Market rates updated successfully from CoinMarketCap!"
-    else
-      flash[:alert] = "Could not update rates. Checked mock defaults or your API key settings."
+    # If the user is already logged in, seamlessly skip the landing page 
+    # and take them directly to their private portfolio dashboard
+    if user_signed_in?
+      redirect_to coins_path
     end
-    redirect_to root_path
-  end
-
-  private
-
-  def calculate_totals
-    @total_investment = @coins.sum { |coin| coin.amount_owned.to_f * coin.cost_per_coin.to_f }
-    @current_portfolio_value = @coins.sum { |coin| coin.amount_owned.to_f * coin.price.to_f }
-    @net_profit_loss = @current_portfolio_value - @total_investment
-    @percentage_return = @total_investment.positive? ? (@net_profit_loss / @total_investment) * 100 : 0
   end
 end

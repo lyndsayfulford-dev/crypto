@@ -10,6 +10,7 @@ gem "propshaft"
 gem "dartsass-rails"
 gem "bootstrap", "~> 5.3.3"
 gem "bcrypt", "~> 3.1.7"
+gem 'devise', '>= 5.0.4'
 
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 

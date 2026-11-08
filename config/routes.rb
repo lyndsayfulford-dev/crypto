@@ -1,10 +1,13 @@
 Rails.application.routes.draw do
-  get "coins/new"
-  get "coins/create"
-  get "coins/edit"
-  get "coins/update"
-  get "coins/destroy"
-  root "home#index"
-  post "refresh_prices", to: "home#refresh", as: :refresh_prices
-  resources :coins # Prepping routing pathways for Part 2 forms!
+  devise_for :users
+
+  # 1. Nest the custom pricing hook cleanly inside the coins resource loop
+  resources :coins, only: [:index, :new, :create, :edit, :update, :destroy] do
+    collection do
+      get :refresh_prices # Maps cleanly to: refresh_prices_coins_path
+    end
+  end
+
+  # 2. Points your home page cleanly to your working portfolio view dashboard
+  root to: "coins#index" 
 end

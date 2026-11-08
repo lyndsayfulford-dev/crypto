@@ -1,12 +1,67 @@
-<div class="container my-5 max-width-form" style="max-width: 700px;">
-  <div class="card p-4 p-md-5 border-0 shadow-sm bg-white">
-    <div class="d-flex justify-content-between align-items-start mb-4">
-      <div>
-        <h2 class="fw-bold mb-1 text-dark">Modify Asset Allocation</h2>
-        <p class="text-muted mb-0">Update holding parameters for <%= @coin.name %> (<%= @coin.symbol %>).</p>
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7 col-lg-6">
+      
+      <!-- Breadcrumb Navigation -->
+      <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><%= link_to "Portfolio", coins_path, class: "text-decoration-none" %></li>
+          <li class="breadcrumb-item active" aria-current="page">Edit <%= @coin.name %></li>
+        </ol>
+      </nav>
+
+      <div class="card shadow-sm border">
+        <div class="card-body p-4">
+          <h2 class="h4 mb-4 fw-bold text-dark">Modify Ledger Entry</h2>
+
+          <%= form_with(model: @coin, local: true) do |form| %>
+            
+            <% if @coin.errors.any? %>
+              <div class="alert alert-danger border-0 shadow-sm mb-4 small" role="alert">
+                <div class="fw-semibold mb-1 text-danger-emphasis">
+                  Please fix the following <%= pluralize(@coin.errors.count, "error") %>:
+                </div>
+                <ul class="mb-0 ps-3">
+                  <% @coin.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-3">
+              <%= form.label :name, "Cryptocurrency Name", class: "form-label fw-semibold text-secondary small text-uppercase tracking-wider" %>
+              <%= form.text_field :name, placeholder: "e.g. Bitcoin", class: "form-control form-control-lg bg-light-subtle font-monospace text-sm" %>
+            </div>
+
+            <div class="mb-3">
+              <%= form.label :symbol, "Ticker Token Symbol", class: "form-label fw-semibold text-secondary small text-uppercase tracking-wider" %>
+              <%= form.text_field :symbol, placeholder: "e.g. BTC", class: "form-control form-control-lg bg-light-subtle font-monospace text-sm" %>
+            </div>
+
+            <div class="row g-3 mb-4">
+              <div class="col-12 col-sm-6">
+                <%= form.label :amount_owned, "Quantity Owned", class: "form-label fw-semibold text-secondary small text-uppercase tracking-wider" %>
+                <%= form.number_field :amount_owned, step: :any, placeholder: "0.00", class: "form-control form-control-lg font-monospace text-sm" %>
+              </div>
+              <div class="col-12 col-sm-6">
+                <%= form.label :cost_per_coin, "Acquisition Purchase Price", class: "form-label fw-semibold text-secondary small text-uppercase tracking-wider" %>
+                <div class="input-group input-group-lg">
+                  <span class="input-group-text bg-light text-secondary border-end-0 font-monospace text-sm">$</span>
+                  <%= form.number_field :cost_per_coin, step: :any, placeholder: "0.00", class: "form-control border-start-0 font-monospace text-sm" %>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-end gap-2 mt-4 pt-2 border-top border-light">
+              <%= link_to "Cancel", coins_path, class: "btn btn-light border px-4 fw-semibold" %>
+              <%= form.submit "Update Ledger Entry", class: "btn btn-primary px-4 fw-semibold shadow-sm" %>
+            </div>
+            
+          <% end %>
+        </div>
       </div>
-      <%= button_to "Delete Asset", coin_path(@coin), method: :delete, data: { confirm: "Are you sure you want to delete this coin entry?" }, class: "btn btn-sm btn-outline-danger" %>
+
     </div>
-    <%= render "form", coin: @coin %>
   </div>
 </div>

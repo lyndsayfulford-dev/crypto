@@ -1,34 +1,69 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <title>CryptoPortfolio</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>CryptoPortfolio</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <!-- FIXED FOR RAILS 8 COMPILATION ENGINE -->
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
-  </head>
-
     <%= yield :head %>
-
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
-
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
-    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-<body>
-  <!-- Insert the global navbar component header here -->
-  <%= render "layouts/navbar" %>
-    <%= yield %>
-</body>
+    <!-- 1. THE NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 border-bottom border-secondary">
+      <div class="container-fluid d-flex justify-content-between align-items-center">
+        
+        <!-- LEFT SIDE: Dynamic logo link based on user session status -->
+        <% if user_signed_in? %>
+          <%= link_to '🪙 CryptoApp', coins_path, class: 'navbar-brand fw-bold text-white mb-0' %>
+        <% else %>
+          <%= link_to '🪙 CryptoApp', root_path, class: 'navbar-brand fw-bold text-white mb-0' %>
+        <% end %>
+        
+        <!-- RIGHT SIDE: User Context Session Controls -->
+        <div class="d-flex align-items-center gap-3">
+          <% if user_signed_in? %>
+            <span class="text-white-50 me-2 small d-none d-sm-inline">Logged in as: <strong class="text-white"><%= current_user.email %></strong></span>
+            <%= button_to 'Sign Out', destroy_user_session_path, method: :delete, class: 'btn btn-outline-danger btn-sm px-3 fw-semibold' %>
+          <% else %>
+            <%= link_to 'Sign In', new_user_session_path, class: 'btn btn-link text-white-50 text-decoration-none btn-sm px-2' %>
+            <%= link_to 'Sign Up', new_user_registration_path, class: 'btn btn-primary btn-sm px-3 fw-semibold shadow-sm' %>
+          <% end %>
+        </div>
+
+      </div>
+    </nav>
+
+        <!-- 2. THE SINGLE FLASH CALL (Placed safely outside and below the navigation block) -->
+    <% flash.each do |type, message| %>
+      <div class="container mt-3">
+        <div class="alert alert-<%= type == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show border-0 shadow-sm small" role="alert">
+          <div class="d-flex align-items-center gap-2">
+            <span><%= type == 'notice' ? '✨' : '⚠️' %></span>
+            <%= message %>
+          </div>
+          <!-- 🟢 PURE INLINE DISMISSAL ENGINE (Bypasses all pipeline dependencies) -->
+          <button type="button" 
+                  class="btn-close" 
+                  onclick="const el = this.closest('.alert'); el.classList.remove('show'); setTimeout(() => el.remove(), 150);" 
+                  aria-label="Close"></button>
+        </div>
+      </div>
+    <% end %>
+
+
+    <!-- 3. MAIN PAGE CONTENT PIPELINE CONTAINER -->
+    <main>
+      <%= yield %>
+    </main>
+
+  </body>
 </html>
