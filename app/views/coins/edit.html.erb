@@ -19,7 +19,7 @@
             <% if @coin.errors.any? %>
               <div class="alert alert-danger border-0 shadow-sm mb-4 small" role="alert">
                 <div class="fw-semibold mb-1 text-danger-emphasis">
-                  Please fix the following <%= pluralize(@coin.errors.count, "error") %>:
+                <%= pluralize(@coin.errors.count, "error") %>
                 </div>
                 <ul class="mb-0 ps-3">
                   <% @coin.errors.full_messages.each do |message| %>

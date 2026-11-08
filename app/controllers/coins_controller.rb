@@ -1,7 +1,6 @@
 class CoinsController < ApplicationController
-  # This ensures a user must log in BEFORE they can access any coin actions
   before_action :authenticate_user!
-  
+
   def refresh_prices
     @coins = current_user.coins
     
@@ -15,7 +14,7 @@ class CoinsController < ApplicationController
         require 'uri'
 
         # 2. Build the CoinMarketCap latest quotes endpoint URI
-        uri = URI("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest)")
+        uri = URI("https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest")
         uri.query = URI.encode_www_form(symbol: symbols_query, convert: "USD")
 
         # 3. Mount the request payload and pass your Developer API authorization headers
@@ -61,8 +60,8 @@ class CoinsController < ApplicationController
                   )
                 end
               end
-            end # <--- Added missing end for the @coins.each block
-
+            end 
+            
             flash[:notice] = "Market rates successfully synchronised with live CoinMarketCap ledgers!"
           end
         else
@@ -132,11 +131,14 @@ class CoinsController < ApplicationController
 
   # 4. GET /coins/:id/edit
   def edit
-    # @coin is securely found by set_coin filter
+  @coin = Coin.find(params[:id]) 
   end
 
   # 5. PATCH/PUT /coins/:id
+    # 5. PATCH/PUT /coins/:id
   def update
+    @coin = Coin.find(params[:id]) # <--- ADD THIS LINE HERE
+    
     if @coin.update(coin_params)
       redirect_to coins_path, notice: "Asset was successfully updated."
     else
@@ -144,8 +146,9 @@ class CoinsController < ApplicationController
     end
   end
 
-  # 6. DELETE /coins/:id (Rails 8 Native Pipeline)
+
   def destroy
+    @coin = Coin.find(params[:id]) # <--- ADD THIS LINE HERE
     @coin.destroy
     redirect_to coins_path, notice: "Asset removed from holdings portfolio index records."
   end
